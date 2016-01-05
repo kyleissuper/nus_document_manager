@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>DocMonkey</title>
+    <meta name="viewport" content="initial-scale=1">
+    <link rel="manifest" href="{{ url_for("static", filename="manifest.json") }}">
+    <link rel="icon" sizes="192x192" href="/static/img/launcher-icon-4x.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/static/img/launcher-icon-4x.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="{{ url_for("static", filename="style.css") }}">
+    {% block head %}
+    {% endblock %}
+</head>
+<body>
+<nav>
+    <a href="{{ url_for("home") }}" class="left">Your Files</a>
+    {% if session["admin"] == True %}
+        <a href="{{ url_for("admin") }}" class="left">Admin Panel</a>
+    {% endif %}
+    {% if "username" in session %}
+        <a href="{{ url_for("logout") }}" class="logout button right">Logout</a>
+    {% endif %}
+</nav>
+<section class="content">
+    {% block body %} {% endblock %}
+    <script type="text/javascript">
+    (function() {
+        var lightlinks = document.getElementsByClassName("target_lightbox");
+        if (lightlinks.length > 0) {
+            var lightbox = document.createElement("div");
+            lightbox.id = "lightbox";
+            var label = document.createElement("div");
+            label.className = "label";
+            //var printframe = document.createElement("iframe");
+            //printframe.className = "hideme";
+            var iframe = document.createElement("iframe");
+            iframe.src = "about:blank";
+            var close = document.createElement("div");
+            close.id = "close";
+            close.textContent = "X";
+            var save_button = document.createElement("a");
+            save_button.id = "save_button";
+            save_button.textContent = "Download";
+            save_button.className = "button loaded";
+            //lightbox.appendChild(printframe);
+            lightbox.appendChild(iframe);
+            lightbox.appendChild(label);
+            lightbox.appendChild(close);
+            lightbox.appendChild(save_button);
+            document.getElementsByTagName("body")[0].appendChild(lightbox);
+            Array.prototype.forEach.call(lightlinks, function(el) {
+                    el.addEventListener("click", function(evt) {
+                        evt.preventDefault();
+                        var real_url = this.href.split("url=")[1].split("&")[0];
+                        //save_button.textContent = "Loading...";
+                        //save_button.className = "hideme";
+                        save_button.href = real_url;
+                        label.textContent = this.textContent;
+                        //printframe.src = real_url;
+                        iframe.src = this.href;
+                        lightbox.style.display = "block";
+                        });
+                    });
+            //printframe.addEventListener("load", function(evt) {
+            //        save_button.textContent = "Print";
+            //        save_button.className = "loaded";
+            //        });
+            //save_button.addEventListener("click", function(evt) {
+            //        printframe.contentWindow.focus();
+            //        printframe.contentWindow.print();
+            //        });
+            close.addEventListener("click", function(evt) {
+                    lightbox.style.display = "none";
+                    });
+        }
+    })();
+    </script>
+</section>
+</body>
+</html>

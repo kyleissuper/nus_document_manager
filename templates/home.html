@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>Welcome, {{ user["first_name"] }}!</h1>
+<h2>Your administrator</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+    </tr>
+    <tr>
+        <td>{{ user["admin_id"] }}</td>
+        <td>{{ admin_name }}</td>
+    </tr>
+</table>
+{% if user["files"]|length > 0 %}
+<h2>Your files</h2>
+<table>
+    <tr>
+        <th>Module Code</th>
+        <th>Title</th>
+        <th>File</th>
+        <th>Status</th>
+        <th>Time Fetched</th>
+    </tr>
+    {% for f in files %}
+        <tr>
+            <td>{{ f["code"] }}</td>
+            <td>{{ f["title"] }}</td>
+            <td><!--a href="{{ url_for("download", filename=f["filename"]) }}"-->
+                <a href="http://docs.google.com/gview?url=http://128.199.155.92{{
+                    url_for("download", filename=f.filename) }}?{{ 
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]|random}}&embedded=true&toolbar=show"
+                    class="button file_button target_lightbox">{{ f["filename"] }}</a></td>
+            <td>
+                {{ f["status"] }}
+                {% if f["status"] == "ignored" %}
+                    <form action="" method="POST">
+                        <input type="hidden" name="filename" value="{{ f["filename"] }}">
+                        <input type="submit" value="Request" class="resubmit button">
+                    </form>
+                {% endif %}
+            </td>
+            <td>{{ f["timestamp_local"] }}</td>
+        </tr>
+    {% endfor %}
+</table>
+<script type="text/javascript">
+    (function() {
+        Array.prototype.forEach.call(
+            document.getElementsByClassName("resubmit"),
+            function(el) {
+                el.addEventListener("click", function(evt) {
+                    evt.preventDefault();
+                    if (confirm("Wait! Are you sure you want to have this printed? No turning back!")) {
+                        this.parentElement.submit();
+                        };
+                    });
+            });
+     })();
+</script>
+{% else %}
+<p>Looks like you don't have any files yet!</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% block body %}
+
+    <h1>Admin Panel</h1>
+
+    <h2>All your users</h2>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+        </tr>
+        {% for friend in users %}
+            <tr>
+                <td>{{ friend }}</td>
+                <td>{{ users[friend] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h2>All their files</h2>
+
+    <form id="admin_form" action="" method="post">
+    <p>
+        Change selected to:
+        <input type="submit" name="change_status" value="requested" class="button">
+        <input type="submit" name="change_status" value="printed" class="button">
+        <input type="submit" name="change_status" value="ignored" class="button">
+    </p>
+    <table>
+        <tr>
+            <th>Module Code</th>
+            <th>Module Title</th>
+            <th>File</th>
+            <th>
+                New
+                <br />
+                <button type="button" class="check_all category" value="new">toggle</button>
+            </th>
+            <th>
+                Requested
+                <br />
+                <button type="button" class="check_all category" value="requested">toggle</button>
+            </th>
+            <th>
+                Printed
+                <br />
+                <button type="button" class="check_all category" value="printed">toggle</button>
+            </th>
+            <th>
+                Ignored
+                <br />
+                <button type="button" class="check_all category" value="ignored">toggle</button>
+            </th>
+            <th>Timestamp</th>
+        </tr>
+        {% for f in files %}
+            <tr>
+                <td>
+                    {{ f.module_code }}
+                </td>
+                <td>
+                    {{ f.module_title }}
+                </td>
+                <td>
+                <a href="http://docs.google.com/gview?url=http://128.199.155.92{{
+                    url_for("download", filename=f.filename) }}?{{ 
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]|random}}&embedded=true&toolbar=show"
+                    class="button file_button target_lightbox">{{ f.filename }}</a>
+                </td>
+                <td>
+                    <button type="button" class="counter">
+                        {{ f.statuses["new"]|length }}
+                    </button>
+                    {% for userid in f.statuses["new"] %}
+                        <label class="new username">
+                            <input type="checkbox" name="selected_docs"
+                            value='{"user_id": "{{ userid }}",
+                            "filename": "{{ f.filename }}"}'>
+                            {{ users[userid] }}
+                        </label>
+                    {% endfor %}
+                </td>
+                <td>
+                    <button type="button" class="counter">
+                        {{ f.statuses["requested"]|length }}
+                    </button>
+                    {% for userid in f.statuses["requested"] %}
+                        <label class="requested username">
+                            <input type="checkbox" name="selected_docs"
+                            value='{"user_id": "{{ userid }}",
+                            "filename": "{{ f.filename }}"}'>
+                            {{ users[userid] }}
+                        </label>
+                    {% endfor %}
+                </td>
+                <td>
+                    <button type="button" class="counter">
+                        {{ f.statuses["printed"]|length }}
+                    </button>
+                    {% for userid in f.statuses["printed"] %}
+                        <label class="printed username">
+                            <input type="checkbox" name="selected_docs"
+                            value='{"user_id": "{{ userid }}",
+                            "filename": "{{ f.filename }}"}'>
+                            {{ users[userid] }}
+                        </label>
+                    {% endfor %}
+                </td>
+                <td>
+                    <button type="button" class="counter">
+                        {{ f.statuses["ignored"]|length }}
+                    </button>
+                    {% for userid in f.statuses["ignored"] %}
+                        <label class="ignored username">
+                            <input type="checkbox" name="selected_docs"
+                            value='{"user_id": "{{ userid }}",
+                            "filename": "{{ f.filename }}"}'>
+                            {{ users[userid] }}
+                        </label>
+                    {% endfor %}
+                </td>
+                <td>
+                    {{ f.timestamp }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    </form>
+
+    <script type="text/javascript">
+    Array.prototype.forEach.call(
+        document.getElementsByClassName("check_all category"),
+        function(el) {
+            el.addEventListener("click", function(evt) {
+                var any_unchecked = false;
+                Array.prototype.forEach.call(
+                    document.getElementsByClassName(evt.target.value),
+                    function(el) {
+                        if (!el.children[0].checked) {
+                            el.click();
+                        } else {
+                            any_unchecked = true;
+                        }
+                    });
+                if (any_unchecked) {
+                    Array.prototype.forEach.call(
+                        document.getElementsByClassName(evt.target.value),
+                        function(el) {
+                            el.click();
+                        });
+                };
+            });
+        });
+    Array.prototype.forEach.call(
+        document.getElementsByClassName("counter"),
+        function(el) {
+            el.addEventListener("click", function(evt) {
+                evt.preventDefault();
+                var any_unchecked = false;
+                Array.prototype.forEach.call(
+                    this.parentElement.getElementsByClassName("username"),
+                    function(el) {
+                    if (!el.children[0].checked) {
+                            el.click();
+                        } else {
+                            any_unchecked = true;
+                        }
+                    });
+                if (any_unchecked) {
+                    Array.prototype.forEach.call(
+                        this.parentElement.getElementsByClassName("username"),
+                        function(el){
+                            el.click();
+                        });
+                };
+                });
+        });
+    document.getElementById("admin_form").addEventListener("change", function(evt) {
+        evt.srcElement.parentNode.classList.toggle("highlighted");
+        });
+    document.getElementById("admin_form").addEventListener("submit", function(evt) {
+        evt.preventDefault();
+        if (confirm("Are you sure?")) this.submit();
+    });
+    </script>
+
+{% endblock %}

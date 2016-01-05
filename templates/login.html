@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>DocMonkey, at Your Service!</h1>
+<p>
+    <img src="{{ url_for("static", filename="img/launcher-icon-4x.png") }}">
+</p>
+<form id="login_form" action="" method="post">
+    <input type="text" placeholder="NUS Username" name="username" value="{{ request.form.username }}">
+    <input type="password" placeholder="NUS Password" name="password" value="{{ request.form.password }}">
+    <input type="submit" value="login" class="button">
+</form>
+{% if error %}
+<p>Oh noes. We has an error!</p>
+<p class="error">{{ error }}</p>
+{% endif %}
+{% endblock %}
