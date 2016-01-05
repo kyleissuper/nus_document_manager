@@ -4,7 +4,6 @@ import os
 import sys
 
 def job():
-    #os.system("source /home/kyle/print_app/venv/bin/activate")
     sys.stdout.flush()
     print "Start!"
     os.system("python scraper.py")
