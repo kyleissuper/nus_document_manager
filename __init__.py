@@ -2,6 +2,7 @@ import json
 import os
 import datetime
 from flask import Flask, render_template, redirect, url_for, request, session, send_from_directory
+from gevent.wsgi import WSGIServer
 from pymongo import MongoClient
 from settings import *
 
@@ -173,4 +174,6 @@ def page_not_found(error):
     return render_template("404.html")
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=False)
+    #app.run(host="0.0.0.0", debug=False)
+    http_server = WSGIServer(("", 5000), app)
+    http_server.serve_forever()
