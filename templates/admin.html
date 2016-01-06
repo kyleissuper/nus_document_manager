@@ -70,6 +70,7 @@
             <th>Module Code</th>
             <th>Title</th>
             <th>File</th>
+            <th>Action</th>
             <th>
                 New
                 <br />
@@ -100,11 +101,14 @@
                 <td>
                     {{ f.module_title }}
                 </td>
+                <td>{{ f.filename }}</td>
                 <td>
-                <a href="http://docs.google.com/gview?url=http://128.199.155.92{{
-                    url_for("download", filename=f.filename) }}?{{ 
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]|random}}&embedded=true&toolbar=show"
-                    class="button file_button target_lightbox">{{ f.filename }}</a>
+                <a href="{{ url_for("download", filename=f.filename) }}"
+                    class="button file_button target_lightbox" data-filename="{{
+                    f.filename
+                    }}">View</a>
+                <a href="{{ url_for("download", filename=f.filename) }}"
+                    class="button file_button" download>Download</a></td>
                 </td>
                 <td>
                     <button type="button" class="counter">
