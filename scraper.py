@@ -139,7 +139,7 @@ with MongoClient() as client:
                             "timestamp_local": ts.strftime("%Y-%m-%d %H:%M"),
                             "filename": new_name,
                             "code": module_code,
-                            "title": module_name,
+                            "title": "EXAM",
                             "status": "new"
                             }} 
                         })
