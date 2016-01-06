@@ -14,7 +14,7 @@
 </table>
 {% if user["files"]|length > 0 %}
 <h2>Your files</h2>
-<p><a class="button" href="{{ url_for("home") }}">Refresh page</a></p>
+<p><a class="button" href="{{ url_for("home") }}" id="refresh">Refresh page</a></p>
 {% if user["password_status"] == "bad" %}
     <p class="warning">Couldn't fetch your data recently! Your password is bad :(</p>
 {% endif %}
@@ -66,6 +66,12 @@
                     });
             });
      })();
+    document.getElementById("refresh").addEventListener("click", function(evt) {
+            var refreshContent = document.createElement("p");
+            refreshContent.textContent = "Refreshing page...";
+            document.getElementsByTagName("body")[0].textContent = "";
+            document.getElementsByTagName("body")[0].appendChild(refreshContent);
+            });
 </script>
 {% else %}
 <p>Looks like you don't have any files yet!</p>
