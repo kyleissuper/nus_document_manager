@@ -70,7 +70,8 @@
             <th>Module Code</th>
             <th>Title</th>
             <th>File</th>
-            <th>Action</th>
+            <th>View</th>
+            <th>Download</th>
             <th>
                 New
                 <br />
@@ -107,8 +108,10 @@
                     class="button file_button target_lightbox" data-filename="{{
                     f.filename
                     }}">View</a>
+                </td>
+                <td>
                 <a href="{{ url_for("download", filename=f.filename) }}"
-                    class="button file_button" download>Download</a></td>
+                    class="button file_button" download>Download</a>
                 </td>
                 <td>
                     <button type="button" class="counter">
