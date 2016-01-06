@@ -3,24 +3,62 @@
 
     <h1>Admin Panel</h1>
 
+    {% if error %}
+        <p class="warning">{{ error }}</p>
+    {% endif %}
+
     <h2>All your users</h2>
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-        </tr>
-        {% for friend in users %}
-            <tr>
-                <td>{{ friend }}</td>
-                <td>{{ users[friend] }}</td>
-            </tr>
+    <div class="table">
+        <div class="tr">
+            <span class="th">ID</span>
+            <span class="th">Name</span>
+            <span class="th">Password</span>
+            <span class="th">Password Status</span>
+            <span class="th">Is Admin?</span>
+            <span class="th">Admin's ID</span>
+            <span class="th">Action</span>
+        </div>
+        {% set admin_id = [] %}
+        {% for username in users %}
+            <form class="tr" action="" method="post">
+                <span class="td">
+                    <input type="hidden" name="form_id" value="delete_user">
+                    <input type="hidden" name="username" value="{{
+                        users[username]["username"] }}">
+                    {{ users[username]["username"] }}
+                </span>
+                <span class="td">{{ users[username]["first_name"] }}</span>
+                <span class="td">*****</span>
+                <span class="td">{{ users[username]["password_status"] }}</span>
+                <span class="td">{{ users[username]["admin"] }}</span>
+                <span class="td">{{ users[username]["admin_id"] }}
+                    {% if admin_id.append(users[username]["admin_id"]) %}
+                    {% endif %}
+                </span>
+                <span class="td">
+                    <input type="submit" class="button" value="Delete">
+                </span>
+            </form>
         {% endfor %}
-    </table>
+        <form id="new_user" action="" method="post" class="tr">
+            <span class="td">
+                <input type="hidden" name="form_id" value="new_user">
+                <input type="text" name="username">
+            </span>
+            <span class="td"><input type="text" name="first_name"></span>
+            <span class="td"><input type="password" name="password"></span>
+            <span class="td"><input type="hidden" name="password_status" value="new">new</span>
+            <span class="td"><input type="checkbox" name="admin"></span>
+            <span class="td"><input type="text" name="admin_id" value="{{ admin_id[0] }}"></span>
+            <span class="td"><input type="submit" class="button"></span>
+        </form>
+    </div>
 
     <h2>All their files</h2>
 
     <form id="admin_form" action="" method="post">
+        <input type="hidden" name="form_id" value="admin_form">
     <p>
         Change selected to:
         <input type="submit" name="change_status" value="requested" class="button">
@@ -30,7 +68,7 @@
     <table>
         <tr>
             <th>Module Code</th>
-            <th>Module Title</th>
+            <th>Title</th>
             <th>File</th>
             <th>
                 New
@@ -77,7 +115,7 @@
                             <input type="checkbox" name="selected_docs"
                             value='{"user_id": "{{ userid }}",
                             "filename": "{{ f.filename }}"}'>
-                            {{ users[userid] }}
+                            {{ users[userid]["first_name"] }}
                         </label>
                     {% endfor %}
                 </td>
@@ -90,7 +128,7 @@
                             <input type="checkbox" name="selected_docs"
                             value='{"user_id": "{{ userid }}",
                             "filename": "{{ f.filename }}"}'>
-                            {{ users[userid] }}
+                            {{ users[userid]["first_name"] }}
                         </label>
                     {% endfor %}
                 </td>
@@ -103,7 +141,7 @@
                             <input type="checkbox" name="selected_docs"
                             value='{"user_id": "{{ userid }}",
                             "filename": "{{ f.filename }}"}'>
-                            {{ users[userid] }}
+                            {{ users[userid]["first_name"] }}
                         </label>
                     {% endfor %}
                 </td>
@@ -116,7 +154,7 @@
                             <input type="checkbox" name="selected_docs"
                             value='{"user_id": "{{ userid }}",
                             "filename": "{{ f.filename }}"}'>
-                            {{ users[userid] }}
+                            {{ users[userid]["first_name"] }}
                         </label>
                     {% endfor %}
                 </td>

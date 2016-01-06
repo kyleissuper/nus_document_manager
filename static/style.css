@@ -1,6 +1,10 @@
 .hideme {
     display: none;
 }
+.warning {
+    color: #f00;
+    font-weight: bold;
+}
 h2 {
     font-weight: normal;
 }
@@ -84,23 +88,30 @@ button:hover, .button:hover {
     background: #ddd;
     text-decoration: none;
 }
-table {
+table, .table {
+    display: table;
     border: 1px solid rgb(216, 216, 216);
     border-radius: 3px;
     border-spacing: 0;
     font-size: 13px;
 }
-tr:nth-of-type(odd) {
+.tr {
+    display: table-row;
+}
+tr:nth-of-type(odd), .tr:nth-of-type(odd) {
     background: #f5f5f5;
 }
-tr:nth-of-type(even) {
+tr:nth-of-type(even), .tr:nth-of-type(even) {
     background: #fff;
 }
-th, td {
+.th, .td {
+    display: table-cell;
+}
+th, td, .th, .td {
     text-align: left;
     padding: 8px;
 }
-th {
+th, .th {
     font-weight: normal;
     border-bottom: 1px solid rgb(216, 216, 216);
 }
@@ -150,6 +161,7 @@ th {
     overflow: hidden;
     padding: 0 0 0 15px;
     color: #333;
+    -webkit-overflow-scrolling:touch;
 }
 #lightbox > iframe {
     position: absolute;

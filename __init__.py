@@ -40,33 +40,68 @@ def add_document(new_doc, username):
 
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
+    error = None
     if "username" not in session:
         return redirect(url_for("login"))
     elif session["admin"] != True:
         return redirect(url_for("home"))
     elif session["admin"] == True:
         if request.method == "POST":
-            with MongoClient() as client:
-                for doc in request.form.getlist("selected_docs"):
-                    doc = json.loads(doc)
-                    client[DB][COLL].update({
-                        "files.filename": doc["filename"],
-                        "username": doc["user_id"]
-                        }, {
-                        "$set": {
-                            "files.$.status": request.form["change_status"]
-                            }
-                        },
-                        multi = True)
+            if request.form["form_id"] == "new_user":
+                with MongoClient() as client:
+                    if client[DB][COLL].count({
+                        "username": request.form["username"]
+                        }) > 0:
+                        error = "An account already exists with this username."
+                    elif client[DB][COLL].count({
+                        "username": request.form["admin_id"],
+                        "admin": True
+                        }) == 0 and request.form["admin_id"] != request.form["username"]:
+                        error = "No administrator's account exists with that username."
+                    else:
+                        if request.form.getlist("admin"):
+                            admin = True
+                        else:
+                            admin = False
+                        client[DB][COLL].insert({
+                            "username": request.form["username"].lower(),
+                            "first_name": request.form["first_name"],
+                            "password": request.form["password"],
+                            "password_status": request.form["password_status"],
+                            "admin": admin,
+                            "admin_id": request.form["admin_id"],
+                            "files": []
+                            })
+            elif request.form["form_id"] == "delete_user":
+                with MongoClient() as client:
+                    if client[DB][COLL].count({
+                        "admin_id": request.form["username"]}) > 0:
+                        error = "This user is currently administrator to other existing accounts. Cannot delete."
+                    else:
+                        client[DB][COLL].remove({
+                            "username": request.form["username"]})
+            elif request.form["form_id"] == "admin_form":
+                with MongoClient() as client:
+                    for doc in request.form.getlist("selected_docs"):
+                        doc = json.loads(doc)
+                        client[DB][COLL].update({
+                            "files.filename": doc["filename"],
+                            "username": doc["user_id"]
+                            }, {
+                            "$set": {
+                                "files.$.status": request.form["change_status"]
+                                }
+                            },
+                            multi = True)
         with MongoClient() as client:
             Document.all_documents = []
             query = client[DB][COLL].find({"admin_id": session["username"]})
             users = {}
             for user in query:
-                users[user["username"]] = user["first_name"]
+                users[user["username"]] = user
                 for f in user["files"]:
                     add_document(f, user["username"])
-        return render_template("admin.html", files=Document.all_documents, users=users)
+        return render_template("admin.html", files=Document.all_documents, users=users, error=error)
 
 @app.route("/", methods=["GET", "POST"])
 def home():

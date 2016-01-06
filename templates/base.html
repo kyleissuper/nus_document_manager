@@ -33,8 +33,6 @@
             lightbox.id = "lightbox";
             var label = document.createElement("div");
             label.className = "label";
-            //var printframe = document.createElement("iframe");
-            //printframe.className = "hideme";
             var iframe = document.createElement("iframe");
             iframe.src = "about:blank";
             var close = document.createElement("div");
@@ -42,9 +40,9 @@
             close.textContent = "X";
             var save_button = document.createElement("a");
             save_button.id = "save_button";
+            save_button.setAttribute("download", "");
             save_button.textContent = "Download";
             save_button.className = "button loaded";
-            //lightbox.appendChild(printframe);
             lightbox.appendChild(iframe);
             lightbox.appendChild(label);
             lightbox.appendChild(close);
@@ -53,24 +51,12 @@
             Array.prototype.forEach.call(lightlinks, function(el) {
                     el.addEventListener("click", function(evt) {
                         evt.preventDefault();
-                        var real_url = this.href.split("url=")[1].split("&")[0];
-                        //save_button.textContent = "Loading...";
-                        //save_button.className = "hideme";
-                        save_button.href = real_url;
-                        label.textContent = this.textContent;
-                        //printframe.src = real_url;
-                        iframe.src = this.href;
+                        save_button.href = this.href;
+                        label.textContent = this.dataset.filename;
+                        iframe.src = "http://docs.google.com/gview?url=" + this.href + "?" + Math.floor(Math.random() * 100) + "&embedded=true";
                         lightbox.style.display = "block";
                         });
                     });
-            //printframe.addEventListener("load", function(evt) {
-            //        save_button.textContent = "Print";
-            //        save_button.className = "loaded";
-            //        });
-            //save_button.addEventListener("click", function(evt) {
-            //        printframe.contentWindow.focus();
-            //        printframe.contentWindow.print();
-            //        });
             close.addEventListener("click", function(evt) {
                     lightbox.style.display = "none";
                     });

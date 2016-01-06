@@ -28,6 +28,15 @@ with MongoClient() as client:
         soup = BeautifulSoup(r.text, "html.parser")
         links = soup.find_all(href=re.compile("\?CourseID="))
         course_ids = set()
+        if len(links) == 0:
+            coll.update({ "username": user["username"] }, { "$set": {
+                "password_status": "bad"
+                }})
+            continue
+        elif user["password_status"] != "ok":
+            coll.update({ "username": user["username"] }, { "$set": {
+                "password_status": "ok"
+                }})
         for link in links:
             course_ids.add(link["href"].split("CourseID=")[1])
             module_codes.add(link.string)
@@ -92,6 +101,7 @@ with MongoClient() as client:
             soup = BeautifulSoup(r.text, "html.parser")
             data = []
             form = soup.find(attrs={"name": "SearchForm"})
+            maxNo = None
             for el in form.find_all("input"):
                 attrs = el.attrs
                 if "value" not in attrs:
@@ -105,7 +115,7 @@ with MongoClient() as client:
                             attrs["name"] == "exportids":
                         continue
                     data.append((attrs["name"], value))
-            if maxNo == 0:
+            if maxNo == 0 or maxNo is None:
                 continue
             data.append(("preSelectedId", ",".join([str(i) for i in range(1, maxNo + 1)])))
             for i in range(1, maxNo+1):

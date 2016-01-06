@@ -14,11 +14,16 @@
 </table>
 {% if user["files"]|length > 0 %}
 <h2>Your files</h2>
+<p><a class="button" href="{{ url_for("home") }}">Refresh page</a></p>
+{% if user["password_status"] == "bad" %}
+    <p class="warning">Couldn't fetch your data recently! Your password is bad :(</p>
+{% endif %}
 <table>
     <tr>
         <th>Module Code</th>
         <th>Title</th>
         <th>File</th>
+        <th>Actions</th>
         <th>Status</th>
         <th>Time Fetched</th>
     </tr>
@@ -26,11 +31,15 @@
         <tr>
             <td>{{ f["code"] }}</td>
             <td>{{ f["title"] }}</td>
-            <td><!--a href="{{ url_for("download", filename=f["filename"]) }}"-->
-                <a href="http://docs.google.com/gview?url=http://128.199.155.92{{
-                    url_for("download", filename=f.filename) }}?{{ 
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]|random}}&embedded=true&toolbar=show"
-                    class="button file_button target_lightbox">{{ f["filename"] }}</a></td>
+            <td>{{ f["filename"] }}</td>
+            <td>
+                <a href="{{ url_for("download", filename=f.filename) }}"
+                    class="button file_button target_lightbox" data-filename="{{
+                    f["filename"]
+                    }}">View</a>
+                <a href="{{ url_for("download", filename=f.filename) }}"
+                    class="button file_button" download>Download</a></td>
+            </td>
             <td>
                 {{ f["status"] }}
                 {% if f["status"] == "ignored" %}
