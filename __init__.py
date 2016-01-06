@@ -101,7 +101,7 @@ def admin():
                 users[user["username"]] = user
                 for f in user["files"]:
                     add_document(f, user["username"])
-        return render_template("admin.html", files=Document.all_documents, users=users, error=error)
+        return render_template("admin.html", files=sorted(Document.all_documents, key=lambda k: k.timestamp, reverse=True), users=users, error=error)
 
 @app.route("/", methods=["GET", "POST"])
 def home():

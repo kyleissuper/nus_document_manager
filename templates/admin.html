@@ -37,7 +37,7 @@
                     {% endif %}
                 </span>
                 <span class="td">
-                    <input type="submit" class="button" value="Delete">
+                    <input type="submit" class="button dangerous" value="Delete">
                 </span>
             </form>
         {% endfor %}
@@ -51,7 +51,7 @@
             <span class="td"><input type="hidden" name="password_status" value="new">new</span>
             <span class="td"><input type="checkbox" name="admin"></span>
             <span class="td"><input type="text" name="admin_id" value="{{ admin_id[0] }}"></span>
-            <span class="td"><input type="submit" class="button"></span>
+            <span class="td"><input type="submit" class="button dangerous"></span>
         </form>
     </div>
 
@@ -61,9 +61,9 @@
         <input type="hidden" name="form_id" value="admin_form">
     <p>
         Change selected to:
-        <input type="submit" name="change_status" value="requested" class="button">
-        <input type="submit" name="change_status" value="printed" class="button">
-        <input type="submit" name="change_status" value="ignored" class="button">
+        <input type="submit" name="change_status" value="requested" class="button dangerous">
+        <input type="submit" name="change_status" value="printed" class="button dangerous">
+        <input type="submit" name="change_status" value="ignored" class="button dangerous">
     </p>
     <table>
         <tr>
@@ -224,10 +224,6 @@
     document.getElementById("admin_form").addEventListener("change", function(evt) {
         evt.srcElement.parentNode.classList.toggle("highlighted");
         });
-    document.getElementById("admin_form").addEventListener("submit", function(evt) {
-        evt.preventDefault();
-        if (confirm("Are you sure?")) this.submit();
-    });
     </script>
 
 {% endblock %}

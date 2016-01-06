@@ -51,7 +51,6 @@
             Array.prototype.forEach.call(lightlinks, function(el) {
                     el.addEventListener("click", function(evt) {
                         evt.preventDefault();
-                        iframe.src = "about:blank";
                         iframe.src = "http://docs.google.com/gview?url=" + this.href + "?" + Math.floor(Math.random() * 100) + "&embedded=true";
                         save_button.href = this.href;
                         label.textContent = this.dataset.filename || "Preview";
@@ -62,6 +61,15 @@
                     lightbox.style.display = "none";
                     });
         }
+    })();
+    (function() {
+        Array.prototype.forEach.call(
+            document.getElementsByClassName("dangerous"), function(el) {
+            el.addEventListener("click", function confirm_launch(evt) {
+                evt.preventDefault();
+                if (confirm("Wait! Are you sure?")) this.form.submit();
+                });
+            });
     })();
     </script>
 </section>
