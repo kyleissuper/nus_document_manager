@@ -43,7 +43,7 @@ with MongoClient() as client:
                 }})
         for link in links:
             course_ids.add(link["href"].split("CourseID=")[1])
-            if "/" in link.string:
+            if link.string is not None and "/" in link.string:
                 link.string = link.string.split("/")[0]
             module_codes.add(link.string)
         for course_id in course_ids:
