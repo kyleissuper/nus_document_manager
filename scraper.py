@@ -43,6 +43,8 @@ with MongoClient() as client:
                 }})
         for link in links:
             course_ids.add(link["href"].split("CourseID=")[1])
+            if "/" in link.string:
+                link.string = link.string.split("/")[0]
             module_codes.add(link.string)
         for course_id in course_ids:
             r = s.get("https://ivle.nus.edu.sg/v1/File/Student/download_all.aspx?CourseID="+course_id)
@@ -50,6 +52,8 @@ with MongoClient() as client:
             if len(soup.find_all(text="No folder found for this Module.")) == 1:
                 continue # No module found
             module_code = soup.title.string.split(" > ")[1]
+            if "/" in module_code:
+                module_code = module_code.split("/")[0]
             module_name = soup.find("a", class_="accordion-toggle").string
             tree = soup.find("div", class_="TreeView")
             links = tree.find_all(href=re.compile("/workbin/file_download"))
