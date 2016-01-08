@@ -10,6 +10,10 @@ import requests
 from bs4 import BeautifulSoup
 from settings import *
 
+def clean_name(name):
+    name = name.replace("/", "-")
+    return name
+
 with MongoClient() as client:
     local_tz = pytz.timezone("Asia/Singapore")
     coll = client[DB][COLL]
@@ -53,7 +57,7 @@ with MongoClient() as client:
                 url = link["href"]
                 filename = link.string
                 datestamp = "".join(link.parent.find("font", class_="iItem-txt").string.split(",")[2][1:-1].split()[0].split("'"))
-                new_name = " - ".join([module_code, filename.split(".")[0], datestamp + "."+filename.split(".")[1]])
+                new_name = " - ".join([module_code, clean_name(filename.split(".")[0]), datestamp + "."+filename.split(".")[1]])
                 # Does it exist on this machine yet?
                 if coll.count({"files.filename": new_name}) == 0:
                     with open("{}/{}".format("files", new_name), "wb") as handle:
@@ -125,7 +129,7 @@ with MongoClient() as client:
             links = soup.find_all("a", string=re.compile("View attached"))
             for link in links:
                 url = link["href"]
-                filename = link.attrs["title"][14:]
+                filename = clean_name(link.attrs["title"][14:])
                 new_name = " - ".join([module_code, "EXAM", filename])
                 # Does it exist on this machine yet?
                 if coll.count({"files.filename": new_name}) == 0:
