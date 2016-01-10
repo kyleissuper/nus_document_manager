@@ -61,9 +61,12 @@
         <input type="hidden" name="form_id" value="admin_form">
     <p>
         Change selected to:
-        <input type="submit" name="change_status" value="requested" class="button dangerous">
-        <input type="submit" name="change_status" value="printed" class="button dangerous">
-        <input type="submit" name="change_status" value="ignored" class="button dangerous">
+        <select name="change_status">
+            <option value="requested">Requested</option>
+            <option value="printed">Printed</option>
+            <option value="ignored">Ignored</option>
+        </select>
+        <input type="submit" class="button dangerous">
     </p>
     <table>
         <tr>
