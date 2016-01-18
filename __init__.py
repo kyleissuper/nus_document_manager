@@ -6,6 +6,9 @@ from gevent.wsgi import WSGIServer
 from pymongo import MongoClient
 from settings import *
 
+# Logic to fix:
+#  When deleting a user, file remains, causing issue with scrape
+
 app = Flask(__name__)
 app.secret_key = os.urandom(24).encode("hex")
 
