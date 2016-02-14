@@ -2,6 +2,7 @@ import os
 import time
 import datetime
 import random
+import string
 import subprocess
 import re
 import pytz
@@ -62,6 +63,7 @@ with MongoClient() as client:
                 filename = link.string
                 datestamp = "".join(link.parent.find("font", class_="iItem-txt").string.split(",")[2][1:-1].split()[0].split("'"))
                 new_name = " - ".join([module_code, clean_name(filename.split(".")[0]), datestamp + "."+filename.split(".")[1]])
+                new_name = "".join([c for c in new_name if c in string.printable])
                 # Does it exist on this machine yet?
                 if coll.count({"files.filename": new_name}) == 0:
                     with open("{}/{}".format("files", new_name), "wb") as handle:
