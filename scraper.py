@@ -61,7 +61,11 @@ with MongoClient() as client:
             for link in links:
                 url = link["href"]
                 filename = link.string
-                datestamp = "".join(link.parent.find("font", class_="iItem-txt").string.split(",")[2][1:-1].split()[0].split("'"))
+                try:
+                    datestamp = "".join(link.parent.find("font", class_="iItem-txt").string.split(",")[2][1:-1].split()[0].split("'"))
+                except Exception as e:
+                    print e
+                    datestamp = ""
                 new_name = " - ".join([module_code, clean_name(filename.split(".")[0]), datestamp + "."+filename.split(".")[1]])
                 new_name = "".join([c for c in new_name if c in string.printable])
                 # Does it exist on this machine yet?
